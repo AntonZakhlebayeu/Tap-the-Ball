@@ -11,15 +11,8 @@ public class DateManager : MonoBehaviour
 	private DateTime LifeTimeOfDailyTask = DateTime.Today.AddDays(1);
 	private TimeSpan RemainedTimeToUpdate;
 
-	private void Start()
+	private void Awake()
 	{
-
-		if (DataManager.GetFirstEnter())
-		{
-			DataManager.SetFirstEnter();
-			DataManager.SaveUserDate(DateTime.Today.ToShortDateString());
-		}
-
 		if (DateTime.Today.ToShortDateString() != DataManager.GetUserDate())
 		{
 			DataManager.SaveUserDate(DateTime.Today.ToShortDateString());
@@ -28,11 +21,36 @@ public class DateManager : MonoBehaviour
 		}
 	}
 
-	private void Update()
+	private void Start()
+	{
+
+		if (DataManager.GetFirstEnter())
+		{
+			DataManager.SetFirstEnter();
+			DataManager.SaveUserDate(DateTime.Today.ToShortDateString());
+		}
+	}
+
+	private void FixedUpdate()
 	{
 		PlayerDate = DateTime.Now;
 		RemainedTimeToUpdate = LifeTimeOfDailyTask.Subtract(PlayerDate);
 
-		UIManager.Instance.RemainingTimeUpdate.text = RemainedTimeToUpdate.ToString(@"hh\:mm\:ss");
+		if (RemainedTimeToUpdate.Hours as int? == 0 && RemainedTimeToUpdate.Minutes as int? == 0
+		&& RemainedTimeToUpdate.Seconds as int? == 0 && RemainedTimeToUpdate.Milliseconds as int? < 2)
+		{
+			DailyTasks.ChangeDailyTasks();
+
+			if (DailyTasks.Instance.IsStarterTasksCompleted())
+				DailyTasks.UpdateUI();
+
+			LifeTimeOfDailyTask = DateTime.Today.AddDays(1);
+			DataManager.SaveUserDate(DateTime.Now.ToShortDateString());
+		}
+
+		if (!Variables._IsDarkMode)
+			UIManager.Instance.RemainingTimeUpdate.text = RemainedTimeToUpdate.ToString(@"hh\:mm\:ss");
+		else
+			UIManager.Instance.RemainingTimeUpdateWhite.text = RemainedTimeToUpdate.ToString(@"hh\:mm\:ss");
 	}
 }
