@@ -12,12 +12,14 @@ public class Shop : MonoBehaviour
 
 	private void Awake()
 	{
-		if (Instance == null)
-			Instance = this;
+		Instance = this;
+
 		if (DataManager.GetFirstEnter())
 			DataManager.SaveShopCondition(ShopItems);
 		else
 			DataManager.GetShopCondition(ref ShopItems);
+
+		ReturnChosenSkin();
 	}
 
 
@@ -91,8 +93,8 @@ public class Shop : MonoBehaviour
 			if (Item.IsChosen == true)
 			{
 				UpdatePlayerSkin(Item);
+				break;
 			}
 		}
 	}
-
 }
