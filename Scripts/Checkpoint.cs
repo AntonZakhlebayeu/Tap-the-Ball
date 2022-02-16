@@ -5,14 +5,12 @@ using UnityEngine;
 public class Checkpoint : MonoBehaviour
 {
 
-    void OnTriggerEnter(Collider other)
-    {
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.gameObject.TryGetComponent(out Variables._player))
+		{
+			Player._LastCheckPoint = this.gameObject;
+		}
 
-        if (other.gameObject.tag == "Player")
-        {
-            Player._LastCheckPoint = this.gameObject;
-        }
-
-    }
-
+	}
 }
