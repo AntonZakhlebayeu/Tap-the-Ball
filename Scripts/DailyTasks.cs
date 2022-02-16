@@ -1,48 +1,51 @@
 using System;
+using System.Globalization;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class DailyTasks : MonoBehaviour
 {
-
-	public DailyTask StartEasyTask;
+	public DailyTask StarterEasyTask;
 	public DailyTask StartMediumTask;
+
 	public List<DailyTask> EasyTasks = new List<DailyTask>();
 	public List<DailyTask> MediumTasks = new List<DailyTask>();
-	public static DailyTasks Instance;
 
+
+	public static DailyTasks Instance;
+	public static int DailyTasksIndex;
 
 	private void Awake()
 	{
 		Instance = this;
-		DataManager.GetIsRewardedForStartEasyTask(out StartEasyTask.IsRewarded);
-		DataManager.GetIsRewardedForStartMediumTask(out StartMediumTask.IsRewarded);
 
+		GetStarterTasksProgress();
 	}
 
 	private void Start()
 	{
-
-		if (StartEasyTask.IsRewarded == true && StartMediumTask.IsRewarded == true)
+		if (IsStarterTasksCompleted())
 		{
-			DataManager.GetEasyTaskProgress(out EasyTasks[0].ProgressOfDailyTask);
-			DataManager.GetMediumTaskProgress(out MediumTasks[0].ProgressOfDailyTask);
-			DataManager.GetIsRewardedForEasyTask(out EasyTasks[0].IsRewarded);
-			DataManager.GetIsRewardedForMediumTask(out MediumTasks[0].IsRewarded);
+			DailyTasksIndex = DataManager.GetDailyTasksIndices();
 
-			UIManager.ShowEasyTask(Instance.EasyTasks[0]);
-			UIManager.ShowMediumTask(Instance.MediumTasks[0]);
+			GetProgress();
+			UpdateUI();
 		}
 		else
 		{
-			DataManager.GetEasyTaskProgress(out StartEasyTask.ProgressOfDailyTask);
-			DataManager.GetMediumTaskProgress(out StartMediumTask.ProgressOfDailyTask);
-
-			UIManager.ShowEasyTask(Instance.StartEasyTask);
-			UIManager.ShowMediumTask(Instance.StartMediumTask);
+			UpdateUIStartTasks();
 		}
+	}
+
+	public bool IsStarterTasksCompleted()
+	{
+		if (StarterEasyTask.IsRewarded == true && StartMediumTask.IsRewarded == true)
+			return true;
+		else
+			return false;
 	}
 
 	public static void UpdateDailyTaskStatus(DailyTask Task)
@@ -60,7 +63,73 @@ public class DailyTasks : MonoBehaviour
 
 	public static void ChangeDailyTasks()
 	{
-		//In work
-		Debug.Log("Tasks is changed...");
+		DailyTasksIndex = DataManager.GetDailyTasksIndices();
+		DailyTasksIndex++;
+		if (DailyTasksIndex == 4)
+		{
+			DailyTasksIndex = 0;
+			DataManager.SaveDailyTasksIndices(DailyTasksIndex);
+		}
+		else
+			DataManager.SaveDailyTasksIndices(DailyTasksIndex);
+
+		ResetProgress();
+	}
+
+	public static void ResetProgress()
+	{
+		DataManager.SaveEasyTaskProgress(0);
+		DataManager.SaveMediumTaskProgress(0);
+		DataManager.SaveIsRewaredForEasyTask(false);
+		DataManager.SaveIsRewaredForMediumTask(false);
+	}
+
+	public static void UpdateUI()
+	{
+		UIManager.ShowEasyTask(Instance.EasyTasks[DailyTasksIndex]);
+		UIManager.ShowMediumTask(Instance.MediumTasks[DailyTasksIndex]);
+	}
+
+	public static void UpdateUIStartTasks()
+	{
+		UIManager.ShowEasyTask(Instance.StarterEasyTask);
+		UIManager.ShowMediumTask(Instance.StartMediumTask);
+	}
+
+	public static void GetProgress()
+	{
+		DataManager.GetEasyTaskProgress(out Instance.EasyTasks[DailyTasksIndex].ProgressOfDailyTask);
+		DataManager.GetMediumTaskProgress(out Instance.MediumTasks[DailyTasksIndex].ProgressOfDailyTask);
+		DataManager.GetIsRewardedForEasyTask(out Instance.EasyTasks[DailyTasksIndex].IsRewarded);
+		DataManager.GetIsRewardedForMediumTask(out Instance.MediumTasks[DailyTasksIndex].IsRewarded);
+	}
+
+	public static void GetStarterTasksProgress()
+	{
+		DataManager.GetEasyTaskProgress(out Instance.StarterEasyTask.ProgressOfDailyTask);
+		DataManager.GetMediumTaskProgress(out Instance.StartMediumTask.ProgressOfDailyTask);
+
+		DataManager.GetIsRewardedForStarterEasyTask(out Instance.StarterEasyTask.IsRewarded);
+		DataManager.GetIsRewardedForStarterMediumTask(out Instance.StartMediumTask.IsRewarded);
+	}
+
+
+	public static void SaveDailyTasksProgress()
+	{
+		DataManager.SaveEasyTaskProgress(Instance.EasyTasks[DailyTasks.DailyTasksIndex].ProgressOfDailyTask);
+		DataManager.SaveMediumTaskProgress(Instance.MediumTasks[DailyTasks.DailyTasksIndex].ProgressOfDailyTask);
+		DataManager.SaveIsRewaredForEasyTask(Instance.EasyTasks[DailyTasks.DailyTasksIndex].IsRewarded);
+		DataManager.SaveIsRewaredForMediumTask(Instance.MediumTasks[DailyTasks.DailyTasksIndex].IsRewarded);
+
+		DataManager.SaveIsRewaredForStarterEasyTask(Instance.StarterEasyTask.IsRewarded);
+		DataManager.SaveIsRewaredForStarterMediumTask(Instance.StartMediumTask.IsRewarded);
+	}
+
+	public static void SaveStarterTasksProgress()
+	{
+		DataManager.SaveEasyTaskProgress(Instance.StarterEasyTask.ProgressOfDailyTask);
+		DataManager.SaveMediumTaskProgress(Instance.StartMediumTask.ProgressOfDailyTask);
+		DataManager.SaveIsRewaredForStarterEasyTask(Instance.StarterEasyTask.IsRewarded);
+		DataManager.SaveIsRewaredForStarterMediumTask(Instance.StartMediumTask.IsRewarded);
 	}
 }
