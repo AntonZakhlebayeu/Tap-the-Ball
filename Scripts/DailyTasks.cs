@@ -68,7 +68,6 @@ public class DailyTasks : MonoBehaviour
 
 	public static void ChangeDailyTasks()
 	{
-		Debug.Log("DailyTasks were changed.");
 		DailyTasksIndex = DataManager.GetDailyTasksIndices();
 		DailyTaskEventController.Unsubscribe(Instance.EasyTasks[DailyTasksIndex], Instance.MediumTasks[DailyTasksIndex]);
 		DailyTasksIndex++;
