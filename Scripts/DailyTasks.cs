@@ -69,7 +69,9 @@ public class DailyTasks : MonoBehaviour
 	public static void ChangeDailyTasks()
 	{
 		DailyTasksIndex = DataManager.GetDailyTasksIndices();
+		DailyTaskEventController.Unsubscribe(Instance.EasyTasks[DailyTasksIndex], Instance.MediumTasks[DailyTasksIndex]);
 		DailyTasksIndex++;
+		DailyTaskEventController.Subscribe(Instance.EasyTasks[DailyTasksIndex], Instance.MediumTasks[DailyTasksIndex]);
 		if (DailyTasksIndex == 4)
 		{
 			DailyTasksIndex = 0;
@@ -100,8 +102,5 @@ public class DailyTasks : MonoBehaviour
 		DataManager.SaveMediumTaskProgress(0);
 		DataManager.SaveIsRewaredForEasyTask(false);
 		DataManager.SaveIsRewaredForMediumTask(false);
-
-
-		DailyTaskEventController.Unsubscribe(Instance.EasyTasks[DailyTasksIndex], Instance.MediumTasks[DailyTasksIndex]);
 	}
 }
