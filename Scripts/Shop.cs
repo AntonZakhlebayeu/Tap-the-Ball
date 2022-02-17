@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Globalization;
+using System;
 
 public class Shop : MonoBehaviour
 {
@@ -16,13 +18,24 @@ public class Shop : MonoBehaviour
 	private void Awake()
 	{
 		Instance = this;
+
+
 		if (DataManager.GetFirstEnter())
 		{
-			DataManager.SaveShopCondition(ShopItems);
-			Debug.Log("Saved");
+			DataManager.SetFirstEnter();
+			DataManager.SaveUserDate(DateTime.Today.ToShortDateString());
+
+			DataManager.SaveShopCondition(Shop.Instance.ShopItems);
 		}
 		else
+		{
 			DataManager.GetShopCondition(ref ShopItems);
+		}
+	}
+
+	private void OnEnable()
+	{
+		Render(ShopItems);
 	}
 
 	public void Render(List<AssetShopItem> shopItems)
