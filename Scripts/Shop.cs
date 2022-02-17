@@ -6,26 +6,23 @@ public class Shop : MonoBehaviour
 {
 	[SerializeField] public List<AssetShopItem> ShopItems;
 	[SerializeField] public ShopCell _shopCellTemplate;
+	[SerializeField] public ShopCell _shopCellBoughtTemplate;
+	[SerializeField] public ShopCell _shopCellChosenTemplate;
 	[SerializeField] private Transform _container;
 
 	public static Shop Instance;
 
+
 	private void Awake()
 	{
 		Instance = this;
-
 		if (DataManager.GetFirstEnter())
+		{
 			DataManager.SaveShopCondition(ShopItems);
+			Debug.Log("Saved");
+		}
 		else
 			DataManager.GetShopCondition(ref ShopItems);
-
-		ReturnChosenSkin();
-	}
-
-
-	public void OnEnable()
-	{
-		Render(ShopItems);
 	}
 
 	public void Render(List<AssetShopItem> shopItems)
@@ -39,8 +36,14 @@ public class Shop : MonoBehaviour
 
 		shopItems.ForEach(shopItem =>
 		{
+			ShopCell cell = null;
 
-			var cell = Instantiate(_shopCellTemplate, _container);
+			if (!shopItem.IsBought && !shopItem.IsChosen) cell = Instantiate(_shopCellTemplate, _container);
+			else if (shopItem.IsBought && !shopItem.IsChosen) cell = Instantiate(_shopCellBoughtTemplate, _container);
+			else if (shopItem.IsBought && shopItem.IsChosen) cell = Instantiate(_shopCellChosenTemplate, _container);
+			else Debug.Log("Invalid!");
+
+
 			cell.Render(shopItem, index);
 			index++;
 		});
