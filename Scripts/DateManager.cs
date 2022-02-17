@@ -5,29 +5,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class DateManager : MonoBehaviour
 {
 	private DateTime PlayerDate = DateTime.Now;
 	private DateTime LifeTimeOfDailyTask = DateTime.Today.AddDays(1);
 	private TimeSpan RemainedTimeToUpdate;
 
-	private void Awake()
+	private void Start()
 	{
 		if (DateTime.Today.ToShortDateString() != DataManager.GetUserDate())
 		{
 			DataManager.SaveUserDate(DateTime.Today.ToShortDateString());
 
 			DailyTasks.ChangeDailyTasks();
-		}
-	}
-
-	private void Start()
-	{
-
-		if (DataManager.GetFirstEnter())
-		{
-			DataManager.SetFirstEnter();
-			DataManager.SaveUserDate(DateTime.Today.ToShortDateString());
+			if (DailyTasks.IsStarterTasksCompleted())
+				DailyTasks.UpdateUI();
 		}
 	}
 
@@ -41,7 +34,7 @@ public class DateManager : MonoBehaviour
 		{
 			DailyTasks.ChangeDailyTasks();
 
-			if (DailyTasks.Instance.IsStarterTasksCompleted())
+			if (DailyTasks.IsStarterTasksCompleted())
 				DailyTasks.UpdateUI();
 
 			LifeTimeOfDailyTask = DateTime.Today.AddDays(1);
