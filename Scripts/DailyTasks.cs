@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public class DailyTasks : MonoBehaviour
 {
 	public DailyTask StarterEasyTask;
-	public DailyTask StartMediumTask;
+	public DailyTask StarterMediumTask;
 
 	public List<DailyTask> EasyTasks = new List<DailyTask>();
 	public List<DailyTask> MediumTasks = new List<DailyTask>();
@@ -22,7 +21,7 @@ public class DailyTasks : MonoBehaviour
 	{
 		Instance = this;
 
-		GetStarterTasksProgress();
+		DailyTaskDataController.GetStarterTasksProgress();
 	}
 
 	private void Start()
@@ -31,19 +30,25 @@ public class DailyTasks : MonoBehaviour
 		{
 			DailyTasksIndex = DataManager.GetDailyTasksIndices();
 
-			GetProgress();
+			DailyTaskEventController.Subscribe(EasyTasks[DailyTasksIndex], MediumTasks[DailyTasksIndex]);
+
+			DailyTaskDataController.GetProgress();
 			UpdateUI();
 		}
 		else
 		{
+			DailyTaskEventController.Subscribe(StarterEasyTask, StarterMediumTask);
 			UpdateUIStartTasks();
 		}
 	}
 
-	public bool IsStarterTasksCompleted()
+	public static bool IsStarterTasksCompleted()
 	{
-		if (StarterEasyTask.IsRewarded == true && StartMediumTask.IsRewarded == true)
+		if (Instance.StarterEasyTask.IsRewarded == true && Instance.StarterMediumTask.IsRewarded == true)
+		{
 			return true;
+		}
+
 		else
 			return false;
 	}
@@ -73,15 +78,8 @@ public class DailyTasks : MonoBehaviour
 		else
 			DataManager.SaveDailyTasksIndices(DailyTasksIndex);
 
-		ResetProgress();
-	}
 
-	public static void ResetProgress()
-	{
-		DataManager.SaveEasyTaskProgress(0);
-		DataManager.SaveMediumTaskProgress(0);
-		DataManager.SaveIsRewaredForEasyTask(false);
-		DataManager.SaveIsRewaredForMediumTask(false);
+		ResetProgress();
 	}
 
 	public static void UpdateUI()
@@ -93,43 +91,17 @@ public class DailyTasks : MonoBehaviour
 	public static void UpdateUIStartTasks()
 	{
 		UIManager.ShowEasyTask(Instance.StarterEasyTask);
-		UIManager.ShowMediumTask(Instance.StartMediumTask);
+		UIManager.ShowMediumTask(Instance.StarterMediumTask);
 	}
 
-	public static void GetProgress()
+	public static void ResetProgress()
 	{
-		DataManager.GetEasyTaskProgress(out Instance.EasyTasks[DailyTasksIndex].ProgressOfDailyTask);
-		DataManager.GetMediumTaskProgress(out Instance.MediumTasks[DailyTasksIndex].ProgressOfDailyTask);
-		DataManager.GetIsRewardedForEasyTask(out Instance.EasyTasks[DailyTasksIndex].IsRewarded);
-		DataManager.GetIsRewardedForMediumTask(out Instance.MediumTasks[DailyTasksIndex].IsRewarded);
-	}
-
-	public static void GetStarterTasksProgress()
-	{
-		DataManager.GetEasyTaskProgress(out Instance.StarterEasyTask.ProgressOfDailyTask);
-		DataManager.GetMediumTaskProgress(out Instance.StartMediumTask.ProgressOfDailyTask);
-
-		DataManager.GetIsRewardedForStarterEasyTask(out Instance.StarterEasyTask.IsRewarded);
-		DataManager.GetIsRewardedForStarterMediumTask(out Instance.StartMediumTask.IsRewarded);
-	}
+		DataManager.SaveEasyTaskProgress(0);
+		DataManager.SaveMediumTaskProgress(0);
+		DataManager.SaveIsRewaredForEasyTask(false);
+		DataManager.SaveIsRewaredForMediumTask(false);
 
 
-	public static void SaveDailyTasksProgress()
-	{
-		DataManager.SaveEasyTaskProgress(Instance.EasyTasks[DailyTasks.DailyTasksIndex].ProgressOfDailyTask);
-		DataManager.SaveMediumTaskProgress(Instance.MediumTasks[DailyTasks.DailyTasksIndex].ProgressOfDailyTask);
-		DataManager.SaveIsRewaredForEasyTask(Instance.EasyTasks[DailyTasks.DailyTasksIndex].IsRewarded);
-		DataManager.SaveIsRewaredForMediumTask(Instance.MediumTasks[DailyTasks.DailyTasksIndex].IsRewarded);
-
-		DataManager.SaveIsRewaredForStarterEasyTask(Instance.StarterEasyTask.IsRewarded);
-		DataManager.SaveIsRewaredForStarterMediumTask(Instance.StartMediumTask.IsRewarded);
-	}
-
-	public static void SaveStarterTasksProgress()
-	{
-		DataManager.SaveEasyTaskProgress(Instance.StarterEasyTask.ProgressOfDailyTask);
-		DataManager.SaveMediumTaskProgress(Instance.StartMediumTask.ProgressOfDailyTask);
-		DataManager.SaveIsRewaredForStarterEasyTask(Instance.StarterEasyTask.IsRewarded);
-		DataManager.SaveIsRewaredForStarterMediumTask(Instance.StartMediumTask.IsRewarded);
+		DailyTaskEventController.Unsubscribe(Instance.EasyTasks[DailyTasksIndex], Instance.MediumTasks[DailyTasksIndex]);
 	}
 }
