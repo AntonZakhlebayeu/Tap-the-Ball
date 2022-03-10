@@ -1,4 +1,4 @@
-# Tap-the-Ball
+# Tap the Ball
 The game is currently in pre-release state. We actively contact publishers to place our game in stores.
 
 Post here some exmaples from my pet-project Tap the Ball.
@@ -12,29 +12,24 @@ Now the game has builds on android and ios devices.
 
 Menu functionality:
 
-https://user-images.githubusercontent.com/91548851/152697344-2caf6636-4636-41c5-aecb-81273eeca452.mp4
+https://user-images.githubusercontent.com/91548851/157615949-d4477f0b-dfc0-4d84-9f48-adba96d3a14e.mov
 
-Game starts:
+Game start:
 
-https://user-images.githubusercontent.com/91548851/152698346-8b8f7612-244f-4e39-b2f2-fe5f20de1d7a.mp4
+https://user-images.githubusercontent.com/91548851/157616000-72968daf-e591-499b-bceb-e3528feed4b4.mov
 
-Platform changes color:
+Platform changes the color:
 
-https://user-images.githubusercontent.com/91548851/152698372-a7a3215d-fd4d-47f6-8a80-755bb45a8fe1.mp4
+https://user-images.githubusercontent.com/91548851/157616107-675d1707-0818-4e61-9094-f6208166bd5b.mov
 
-Player lose:
+The player loses the game:
 
-https://user-images.githubusercontent.com/91548851/152698394-1d144462-cec5-4431-8345-5941ce7ac279.mp4
-
-Dark mode in game:
-
-https://user-images.githubusercontent.com/91548851/152698411-ef28ae33-c0c4-498f-8a05-2b7cde298ba4.mp4
+https://user-images.githubusercontent.com/91548851/157616210-6d966b90-608f-4a5b-a82f-a305fe0814bc.mov
 
 Shop system:
 
-https://user-images.githubusercontent.com/91548851/152698415-d291e958-0046-4d41-8ecf-0503b5f5edcc.mp4
+https://user-images.githubusercontent.com/91548851/157616255-01bd8794-356b-4239-aafa-8f254f3f4b59.mov
 
-Invulnerability:
+Daily tasks and statistics:
 
-https://user-images.githubusercontent.com/91548851/152698433-89810020-b2cb-494a-b94d-bce3ec86e1bf.mp4
-
+https://user-images.githubusercontent.com/91548851/157616299-93a3c413-7b99-41dc-9d3f-c664f406f72a.mov
