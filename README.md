@@ -1,4 +1,6 @@
 # Tap-the-Ball
+The game is currently in pre-release state. We actively contact publishers to place our game in stores.
+
 Post here some exmaples from my pet-project Tap the Ball.
 
 Tap the ball is a hypercasual mobile game created by me and my mates.
